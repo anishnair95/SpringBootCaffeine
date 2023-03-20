@@ -1,0 +1,18 @@
+spring:
+  cache:
+    cache-names: productCache
+    caffeine:
+      spec: maximumSize=500, expireAfterWrite=62s
+  datasource:
+    username: root
+    password: password
+    url: jdbc:mysql://localhost:3307/javatechie?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+
+server:
+  port: 9191
