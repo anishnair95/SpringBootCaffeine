@@ -3,6 +3,7 @@ spring:
     cache-names: productCache
     caffeine:
       spec: maximumSize=100, expireAfterWrite=63s
+    type: caffeine
   datasource:
     username: root
     password: password
