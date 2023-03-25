@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Objects;
 
 @Component
@@ -15,7 +16,7 @@ public class CustomKeyGenerator implements KeyGenerator {
     @Override
     public Object generate(Object target, Method method, Object... params) {
 
-        String key = target.getClass().getSimpleName()+method.getName()+params.toString();
+        String key = target.getClass().getSimpleName()+method.getName()+ Arrays.toString(params);
 
 //        return target.getClass().getSimpleName()+ "_" +method.getName()+ "_"+
 //                StringUtils.arrayToDelimitedString(params,"_");

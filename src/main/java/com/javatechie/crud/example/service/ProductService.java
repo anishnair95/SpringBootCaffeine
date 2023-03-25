@@ -47,7 +47,7 @@ public class ProductService implements IProductService {
     }
 
     //Get All Products
-    @Cacheable(cacheNames = {"productCache"}, unless = "#result==null", keyGenerator = "customKeyGenerator")
+    @Cacheable(unless = "#result==null", keyGenerator = "customKeyGenerator")
     public List<Product> getProducts() {
         LOGGER.info("Hitting DB for 1st time");
         return productRepository.findAll();
@@ -73,7 +73,7 @@ public class ProductService implements IProductService {
 
     //cache if result is not null with key as id
     //Delete all the cache entry. So fetch will store new cache on method invocation
-//    @CacheEvict(value="userCache",allEntries = true)
+//    @CacheEvict(value="productCache",allEntries = true)
     @CachePut(value="productCache",unless = "#result==null", keyGenerator = "customKeyGenerator")
     public Product updateProduct(Product product) {
 
