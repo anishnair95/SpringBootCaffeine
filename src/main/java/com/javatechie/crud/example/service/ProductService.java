@@ -47,7 +47,7 @@ public class ProductService implements IProductService {
     }
 
     //Get All Products
-    @Cacheable(cacheNames = {"productCache"})
+    @Cacheable(cacheNames = {"productCache"}, unless = "#result==null", keyGenerator = "customKeyGenerator")
     public List<Product> getProducts() {
         LOGGER.info("Hitting DB for 1st time");
         return productRepository.findAll();

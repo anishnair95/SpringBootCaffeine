@@ -29,11 +29,21 @@ public class CaffeineCacheController {
         this.objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     }
 
+    /**
+     *
+     * @return This API returns the all cache available in the app
+     */
     @GetMapping("/name")
     public Collection<String> getCacheNames() {
         return cacheManager.getCacheNames();
     }
 
+    /**
+     *
+     * @param cacheName Name of the cache
+     * @return This API returns the all cached data in JSON
+     * @throws JsonProcessingException Throws exception on invalid json processing
+     */
     @GetMapping("/entries/{cacheName}")
     public Map<String, Object> getEntriesForCache(@PathVariable(name = "cacheName") final String cacheName) throws JsonProcessingException {
         final Cache<String, Object> cache = (Cache<String, Object>) cacheManager.getCache(cacheName).getNativeCache();
