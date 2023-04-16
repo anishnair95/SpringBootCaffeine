@@ -104,4 +104,11 @@ public class ProductService implements IProductService {
         return "No product exist with id !! " + id;
     }
 
+
+    @Override
+    public List<Product> getAllProductByNames(List<String> names) {
+
+        return productRepository.findByNameIn(names);
+    }
+
 }

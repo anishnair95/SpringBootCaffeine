@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ProductController {
@@ -83,5 +84,14 @@ public class ProductController {
     @DeleteMapping("/products/{id}")
     public String deleteProduct(@PathVariable int id) {
         return iProductService.deleteProduct(id);
+    }
+
+
+    @PostMapping("/bulk/products/name")
+    public List<Product> getAllProductsByName(@RequestBody Map<String, Object> data) {
+
+        List<String>names = (List<String>) data.get("names");
+        return iProductService.getAllProductByNames(names);
+
     }
 }

@@ -20,5 +20,7 @@ public interface IProductService {
 
     public Product updateProduct(Product product);
 
+    public List<Product> getAllProductByNames(List<String> names);
+
 }
 
