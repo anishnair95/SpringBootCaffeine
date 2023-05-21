@@ -1,5 +1,6 @@
 package com.javatechie.crud.example.service;
 
+import com.javatechie.crud.example.Exception.InvalidProductException;
 import com.javatechie.crud.example.customKey.CustomKeyGenerator;
 import com.javatechie.crud.example.entity.Product;
 import com.javatechie.crud.example.repository.ProductRepository;
@@ -11,10 +12,12 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 @CacheConfig(cacheNames = {"productCache"})
 public class ProductService implements IProductService {
 
@@ -42,19 +45,23 @@ public class ProductService implements IProductService {
     //Delete all the cache entry. So fetch will store new cache on method invocation
 
 //    @CacheEvict(value="productCache",allEntries = true)
-    public Product saveProduct(Product product) {
+    public Product saveProduct(Product product) throws InvalidProductException {
+
+        if (product.getQuantity() < 1 ) {
+            throw new InvalidProductException();
+        }
         return productRepository.save(product);
     }
 
     //Get All Products
-    @Cacheable(unless = "#result==null", keyGenerator = "customKeyGenerator")
+//    @Cacheable(unless = "#result==null", keyGenerator = "customKeyGenerator")
     public List<Product> getProducts() {
         LOGGER.info("Hitting DB for 1st time");
         return productRepository.findAll();
     }
 
     //Get Product By Id
-    @Cacheable(value = "productCache",unless="#result==null", keyGenerator = "customKeyGenerator")
+//    @Cacheable(value = "productCache",unless="#result==null", keyGenerator = "customKeyGenerator")
     public Product getProductById(int id) {
 
         LOGGER.info("Hitting DB for 1st time");
@@ -74,24 +81,32 @@ public class ProductService implements IProductService {
     //cache if result is not null with key as id
     //Delete all the cache entry. So fetch will store new cache on method invocation
 //    @CacheEvict(value="productCache",allEntries = true)
-    @CachePut(value="productCache",unless = "#result==null", keyGenerator = "customKeyGenerator")
-    public Product updateProduct(Product product) {
 
-        LOGGER.info("Hitting DB for 1st time");
+    //@CachePut only works in Caffeine without @CacheEvict
+//    @CachePut(value="productCache",unless = "#result==null", keyGenerator = "customKeyGenerator")
+    public Product updateProduct(Product product) throws InvalidProductException {
+
+        LOGGER.info("Executing updateProduct");
+
+
         Product existingProduct = productRepository.findById(product.getId()).orElse(null);
 
         if(existingProduct==null) {
             return null;
         }
         existingProduct.setName(product.getName());
-        existingProduct.setQuantity(product.getQuantity());
         existingProduct.setPrice(product.getPrice());
+
+        if (product.getQuantity() < 3) {
+            throw new InvalidProductException("Invalid Product Detail");
+        }
+        existingProduct.setQuantity(product.getQuantity());
         return productRepository.save(existingProduct);
     }
 
 
     //Delete all the cache entry. So fetch will store new cache on method invocation
-    @CacheEvict(value="productCache",allEntries = true)
+//    @CacheEvict(value="productCache",allEntries = true)
     public String deleteProduct(int id) {
         LOGGER.info("Hitting DB for 1st time");
         Product productData = getProductById(id);

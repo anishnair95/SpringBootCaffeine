@@ -19,6 +19,6 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE )
     private int id;
     private String name;
-    private int quantity;
-    private double price;
+    private Integer quantity;
+    private Double price;
 }
