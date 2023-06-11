@@ -12,5 +12,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     @Query("select p from Product p where p.name in (:productNames)")
     List<Product> findByNameIn(List<String> productNames);
 
+    List<Product> findByIdIn(List<Integer> id);
+
 }
 

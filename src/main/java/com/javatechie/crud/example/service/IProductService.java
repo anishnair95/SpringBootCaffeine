@@ -2,6 +2,7 @@ package com.javatechie.crud.example.service;
 
 import com.javatechie.crud.example.entity.Product;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 public interface IProductService {
@@ -21,6 +22,8 @@ public interface IProductService {
     public Product updateProduct(Product product);
 
     public List<Product> getAllProductByNames(List<String> names);
+
+    ByteArrayInputStream createCSV(List<String> ids);
 
 }
 

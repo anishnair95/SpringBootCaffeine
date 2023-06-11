@@ -3,6 +3,7 @@ package com.javatechie.crud.example.service;
 import com.javatechie.crud.example.customKey.CustomKeyGenerator;
 import com.javatechie.crud.example.entity.Product;
 import com.javatechie.crud.example.repository.ProductRepository;
+import com.javatechie.crud.example.util.CSVUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,14 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @CacheConfig(cacheNames = {"productCache"})
@@ -109,6 +117,30 @@ public class ProductService implements IProductService {
     public List<Product> getAllProductByNames(List<String> names) {
 
         return productRepository.findByNameIn(names);
+    }
+
+
+    //donwload csv using apache-commons-csv library
+
+    @Override
+    public ByteArrayInputStream createCSV(List<String> ids) {
+
+        //fetch all records
+        // add to csv
+        // return as response;
+
+        List<Integer> productIds = convertToInteger(ids);
+        List<Product> products = productRepository.findByIdIn(productIds);
+
+        LOGGER.info("Products size = {}", products.size());
+        ByteArrayInputStream bis = products.size() > 0 ? CSVUtils.beanToCSV(products) : null;
+
+        return bis;
+    }
+
+    private List<Integer> convertToInteger(List<String> ids) {
+        return ids.stream()
+                .map(Integer::parseInt).collect(Collectors.toList());
     }
 
 }
