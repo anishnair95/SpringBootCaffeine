@@ -1,6 +1,9 @@
 package com.javatechie.crud.example.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.javatechie.crud.example.dto.ProductDto;
 import com.javatechie.crud.example.entity.Product;
+import com.javatechie.crud.example.mapper.ProductMapper;
 import com.javatechie.crud.example.service.IProductService;
 import com.javatechie.crud.example.util.ClassUtils;
 import org.slf4j.Logger;
@@ -10,14 +13,11 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public List<Product> findAllProducts() {
+    public List<Product> findAllProducts() throws JsonProcessingException {
         List<Product> productList = iProductService.getProducts();
 
         if(productList==null) {
@@ -64,18 +64,19 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public Product findProductById(@PathVariable int id) {
+    public ProductDto findProductById(@PathVariable int id) {
         Product productData = iProductService.getProductById(id);
 
         if(productData==null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return  productData;
+        ProductMapper mapper = ProductMapper.INSTANCE;
+        return  mapper.fromEntity(productData);
 
     }
 
     @GetMapping("/products/name/{name}")
-    public Product findProductByName(@PathVariable String name) {
+    public Product findProductByName(@PathVariable("name") String name) {
         Product productData = iProductService.getProductByName(name);
 
         if(productData==null) {

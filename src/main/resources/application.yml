@@ -1,6 +1,6 @@
 spring:
   cache:
-    cache-names: productCache
+    cache-names: productCache,settingCache,metadataCache
     caffeine:
       spec: maximumSize=100, expireAfterWrite=63s
     type: caffeine

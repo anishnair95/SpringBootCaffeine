@@ -1,5 +1,6 @@
 package com.javatechie.crud.example.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.javatechie.crud.example.entity.Product;
 
 import java.io.ByteArrayInputStream;
@@ -11,7 +12,7 @@ public interface IProductService {
 
     public List<Product> saveProducts(List<Product> products);
 
-    public List<Product> getProducts();
+    public List<Product> getProducts() throws JsonProcessingException;
 
     public Product getProductById(int id);
 
