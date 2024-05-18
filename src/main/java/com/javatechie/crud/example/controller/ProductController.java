@@ -1,6 +1,8 @@
 package com.javatechie.crud.example.controller;
 
+import com.javatechie.crud.example.dto.ProductDto;
 import com.javatechie.crud.example.entity.Product;
+import com.javatechie.crud.example.mapper.ProductMapper;
 import com.javatechie.crud.example.service.IProductService;
 import com.javatechie.crud.example.util.ClassUtils;
 import org.slf4j.Logger;
@@ -71,6 +73,19 @@ public class ProductController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return  productData;
+
+    }
+
+    // example of mapping using mapstruct
+    @GetMapping("/products/v2/{id}")
+    public ProductDto findProductByIdV2(@PathVariable int id) {
+        Product productData = iProductService.getProductById(id);
+
+        if(productData==null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        ProductMapper mapper = ProductMapper.INSTANCE;
+        return  mapper.fromEntity(productData);
 
     }
 
